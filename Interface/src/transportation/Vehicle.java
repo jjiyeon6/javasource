@@ -7,5 +7,10 @@ public interface Vehicle {
 	
 	//추상 메소드  [abstract] 생략가능
 	public abstract void run();
+	
+	//default method
+	default void electCharge() {
+		System.out.println("충전중입니다.");
+	}
 		
 }

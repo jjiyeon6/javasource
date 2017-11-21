@@ -1,0 +1,21 @@
+package p279_Exercise;
+
+public class AccountExample {
+
+	public static void main(String[] args) {
+		
+		Account account = new Account();
+		
+		account.setBalance(10000);
+		System.out.println("ÇöÀç ÀÜ°í1: " + account.getBalance());
+		
+		account.setBalance(-100);
+		System.out.println("ÇöÀç ÀÜ°í2: " + account.getBalance());
+		
+		account.setBalance(2000000);
+		System.out.println("ÇöÀç ÀÜ°í3: " + account.getBalance());
+		
+		account.setBalance(300000);
+		System.out.println("ÇöÀç ÀÜ°í4: " + account.getBalance());
+	}
+}
