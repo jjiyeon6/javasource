@@ -37,6 +37,13 @@ public class Dao {
 	}
 
 	public boolean delete(int sno) {
+		for(int i=0; i<cnt; i++) {
+			if(sno == datas[i].getSno()) {
+				datas[i] = null;
+				datas[i] = datas[i+1];
+				cnt--;
+			}
+		}
 		return false;
 	}
 	

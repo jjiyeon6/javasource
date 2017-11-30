@@ -51,6 +51,15 @@ public class Service {
 	}
 	
 	public void delProduct() {
-		
+		System.out.println("제품 삭제");
+		System.out.println("sno: ");
+		int sno = sc.nextInt();
+		Product p = dao.get(sno);
+		if(p!=null) {
+			dao.delete(sno);
+			System.out.println("삭제되었습니다.");
+		} else {
+			System.out.println("삭제할 제품이 없습니다.");
+		}
 	}
 }
