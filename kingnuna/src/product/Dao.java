@@ -10,8 +10,12 @@ public class Dao {
 	}
 	
 	public void add(Product p) {
-		datas[cnt] = p;
-		cnt++;
+		if(cnt<datas.length) {
+			datas[cnt] = p;
+			cnt++;
+		} else {
+			System.out.println("배열이 가득 참");
+		}
 	}
 	
 	public int search(int sno) {
@@ -32,19 +36,45 @@ public class Dao {
 		return datas[idx];
 	}
 	
-	public boolean edit(Product p) {
-		return false;
+//	public boolean edit(int sno, Product p) {
+	public boolean edit(Product p) {	
+		int idx = search(p.getSno());
+		if(idx <= -1) {
+			System.out.println("수정 취소");
+			return false;
+		} else {
+			datas[idx].setPrice(p.getPrice());
+			datas[idx].setNum(p.getNum());
+			return true;
+		}
+		
+//		System.out.println("edit()");
+//		for(int i=0; i<cnt; i++) {
+//			if(sno == datas[i].getSno()) {
+//				System.out.println(p);
+//				p.setSno(datas[i].getSno());
+//				datas[i] = p;
+//				System.out.println(p);
+//			}
+//		}	
+//		return false;
 	}
 
 	public boolean delete(int sno) {
-		for(int i=0; i<cnt; i++) {
-			if(sno == datas[i].getSno()) {
-				datas[i] = null;
+		int idx = search(sno);
+		if(idx == -1) {
+			return false;
+		} else {
+			for(int i=idx; i<cnt-1; i++) {
+				//todo
+				System.out.println(idx+", "+cnt);
+				System.out.println(datas[i]);
+//				datas[i] = null;
 				datas[i] = datas[i+1];
-				cnt--;
 			}
+			cnt--;
+			return true;
 		}
-		return false;
 	}
 	
 	public Product[] getAll() {//배열 전체를 반환

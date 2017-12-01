@@ -47,7 +47,20 @@ public class Service {
 	}
 	
 	public void editProduct() {
-		
+		System.out.println("제품 수정");
+		System.out.println("sno: ");
+		int sno = sc.nextInt();
+		Product p = dao.get(sno);
+		System.out.println("new price: ");
+		int price = sc.nextInt();
+		System.out.println("new num: ");
+		int num = sc.nextInt();
+		if(p!=null) {
+			dao.edit(new Product(sno, "", price, num));
+			System.out.println("수정이 정상처리 되었음");
+		} else {
+			System.out.println("수정할 제품이 없습니다.");
+		}
 	}
 	
 	public void delProduct() {
@@ -57,7 +70,7 @@ public class Service {
 		Product p = dao.get(sno);
 		if(p!=null) {
 			dao.delete(sno);
-			System.out.println("삭제되었습니다.");
+			System.out.println("삭제가 정상처리 되었음");
 		} else {
 			System.out.println("삭제할 제품이 없습니다.");
 		}
