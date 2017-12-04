@@ -9,7 +9,7 @@ public interface Dao {
 
 	ArrayList<Order> selectAll();
 
-	void update(int order_num, String str);
+	void editResult(int order_num, String str);
 
 	void delete(int order_num);
 }

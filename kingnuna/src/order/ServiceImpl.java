@@ -63,7 +63,7 @@ public class ServiceImpl implements Service {
 			System.out.println("결제유무");
 			o.setResult(sc.next());
 			System.out.println(o);
-			dao.update(o.getNum(), o.getResult());
+			dao.editResult(o.getNum(), o.getResult());
 			System.out.println(o);
 			System.out.println("수정되었습니다.");
 		}

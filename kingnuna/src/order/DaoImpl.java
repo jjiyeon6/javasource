@@ -100,17 +100,17 @@ public class DaoImpl implements Dao {
 	}
 
 	@Override
-	public void update(int order_num, String str) {
+	public void editResult(int order_num, String str) {
 		// TODO Auto-generated method stub
 		String sql = "update myorder set num = ?, result = ? where order_num = ?";
 		connect();
 		PreparedStatement pstmt = null;
 		try {
 			pstmt = conn.prepareStatement(sql);
-//			System.out.println("DaoImpl update():"+o);
 //			pstmt.setInt(1,o.getNum());
 //			pstmt.setInt(2, o.getTotal_price());
 //			pstmt.setDate(3, o.getO_date());
+			
 //			pstmt.setInt(1, num);
 			pstmt.setString(2, str);
 			pstmt.setInt(3, order_num);
