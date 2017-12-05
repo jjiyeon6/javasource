@@ -1,0 +1,351 @@
+*** oracle ***
+orcl 
+
+SYSTEM/orclKitri08
+
+HR / 1234
+
+ora_user /yuk
+
+
+//데이터 베이스 저장 파일 생성
+//테이블스페이스 생성
+CREATE TABLESPACE myts DATAFILE
+'D:\app\KITRI\oradata\orcl\myts.dbf'
+SIZE 100M AUTOEXTEND ON NEXT 5M;
+
+
+//user "SYSTEM"상태에서 사용자 생성
+//id/비밀번호 생성  (ora_user/yuk)
+CREATE USER ora_user IDENTIFIED BY yuk
+DEFAULT TABLESPACE myts
+TEMPORARY TABLESPACE temp;
+
+
+//권한부여 (DBA:데이터베이스 관리자 권한)
+GRANT DBA TO ora_user;
+
+
+//현재 로그인된 user
+SHOW USER;
+
+
+//SQL 접속
+SQL> CONNECT [id]/[password]	//conn
+
+SAVE [파일명]
+START [파일명]	//@ [파일명]
+
+SQL> SET PAGESIZE 100
+SQL> SET LINESIZE 100
+
+SQL> CLEAR SCREEN	// CL SCR
+
+
+//테이블 옵션 상태
+SQL> DESC [TABLE명]
+
+
+//TABLE 확인
+SELECT * FROM TAB;
+
+
+//파일 저장
+SQL> SPOOL RESULT
+SQL> SELECT * FROM EMP;
+SQL> SPOOL OFF
+
+/*
+spool filename |off | out    :  결과를 파일로 저장하기, out는 프린터로 내보내기
+get filename     :  파일에 데이터를 버퍼로 올리기
+save filename   :   버퍼의 내용을 파일로 저장하기
+*/
+
+
+select
+from 
+where
+group by
+having
+order by
+
+
+//2017-10-26
+
+cross join
+equi join
+		natural join
+		join ~using
+		join ~on
+non-equi join
+self join
+outer join
+		left outer join	테이블의
+		light outer join
+		full outer join
+
+
+숙제 185p. 1~20
+
+145p. 1~38	 
+
+
+SQL조건 연산자(ANY, SOME, ALL) 
+
+ANY(SOME), ALL : 주로 서브 쿼리와 함께 사용되며 
+ANY의 경우 서브쿼리에서 여러 개의 값이 나오는데 이 값들에 대해서는 어떠한 값인지 모르며 이 값 중 어떤 한 값 보다만 어떻다라고 비교할 때 사용된다. 
+ALL의 경우 집합의 모든 값과 비교를 하게 된다. 즉 모든 값과 비교하여 TRUE가 되어야 한다는 것이다. 
+예를 들어 급여(sal) 가 (500,600,700) 값 중 어느 한 값보다 큰 값이 있는지를 볼려면 sal > any (500, 600, 700)이라고 기술하면 된다 이 경우에는 3개의 값 중 하나의 값에라도 만족을 하면 TRUE가 된다(sal > 500). 
+또 급여가 500, 600, 700 모두 보다 큰 값을 원한다면 sal > all(500, 600, 700) 형태의 질의가 되어야 한다.(sal > 700) 즉 이 경우에는 급여가 최소 700보다 큰 데이터가 추출되는 것이다. 
+
+
+ 
+
+
+//2017-10-27
+
+//데이터베이스 SID 확인
+
+SQL> select name, db_unique_name from v$database;
+
+NAME      DB_UNIQUE_NAME
+--------- ------------------------------
+ORCL      orcl
+
+SQL> select instance from v$thread;
+
+INSTANCE
+---------------------------------------------------
+orcl
+	  
+	  
+//
+//D:\app\KITRI\product\11.2.0\dbhome_1\NETWORK\ADMIN\tnsnames.ora
+//에서도 확인 가능
+	  	
+	  
+//서브쿼리 이용 INSERT
+
+INSERT INTO EMP_02 (ENAME,EMPNO,GENDER) 
+SELECT ENAME,EMPNO,GENDER FROM EMP_02 WHERE NO = 2
+;	  
+
+//테이블 컬럼명 변경
+ALTER TABLE EMP_02
+RENAME COLUMN ENAME TO MYNAME;
+	  
+//rownum
+rownum의 값은 질의를 수행했을 때, 임시로 생성되는 값으로 별도로 행에 저장되지 않는다.
+rownum은 첫 번째 값이 할당된 이후 증가한다.
+rownum 할당은 질의의 where절이 처리된 후에 할당되며,
+질의에 order by / group by 조건이 있으면 이 조건을 수행하기 전에 값을 얻을 수 없다.
+	
+select *
+from (select * from dept order by deptno desc)
+where rownum <3; --상위2row
+	  
+select b.*
+from (select rownum rn, a.*
+		from (select * from dept order by deptno desc) a
+	  ) b
+where rn between 1 and 2;--상위2row	  
+	  
+//deptno가 두번째로 큰 값을 구하라.
+select deptno, dname, loc 
+from 
+    (select deptno, dname, loc
+    from dept
+--    where deptno < 40
+    where deptno < (select max(deptno) from dept)
+    order by deptno desc
+    ) 
+where rownum =1
+;	  
+
+select * 
+from (select rownum as rnum, deptno 
+	  from dept) a 
+where a.rnum =2;
+
+// rank()함수 이용
+select a.*
+from 
+    (select dept.*, Rank() over(order by deptno desc) as rn
+    from dept    
+    ) a
+where rn = 2
+;
+
+
+
+
+//2017-10-30
+
+//데이터베이스 내에 존재하는 제약조건 확인
+select * from USER_CONSTRAINTS
+where table_name in ('T_STUDENT','T_ENROL')
+;
+
+alter table t_student
+drop constraint SYS_C0011078;
+
+alter table t_student
+add constraint c_stu_grade check(stu_grade between 1 and 3);
+
+
+
+
+//급여가 부서번호가 20인 부서의 평균급여보다 크고,
+자신이 상급사원이면서, 부서번호가 20이 아닌 사원의 모든 정보를 구하라
+
+select * 
+from emp 
+where sal > (select avg(sal) from emp where deptno = 20 group by deptno)
+and job = 'MANAGER'
+and deptno <> 20
+;
+vs
+
+select * 
+from emp 
+where sal > (select avg(sal) from emp where deptno = 20)
+and empno in (select distinct mgr from emp)
+and deptno <> 20
+;
+
+
+/*
+test(no, 사번, 사원명, 급여, 관리자사번) 라는 테이블을 만들고,
+사원테이블(emp)에서 관리자사번이 7839이고, 급여가 2500에서 3000사이에 있는 사원의 데이터를(empno,ename,sal,mgr) 
+insert문을 이용하여 작성하시오.
+*/
+create table test(
+no 		number(9),
+empno   char(4),
+ename   varchar2(30),
+sal 	number(7,2),
+mgr 	char(4)
+);
+
+create Sequence seq1
+start with 1
+maxvalue 1000
+Increment by 1;
+
+insert into test--(no, empno, ename, sal, mgr)
+select seq1.nextval, empno, ename, sal, mgr from emp
+where mgr = 7839 and sal between 2500 and 3000
+;
+
+select * from test;
+
+
+DELETE, TRUNCATE, DROP 명령어의 차이점
+DELETE 명령어는 데이터는 지워지지만 테이블 용량은 줄어 들지 않는다. 원하는 데이터만 지울 수 있다. 삭제 후 잘못 삭제한 것을 되돌릴 수 있다.
+TRUNCATE 명령어는 용량이 줄어 들고, 인덱스 등도 모두 삭제 된다. 테이블은 삭제하지는 않고, 데이터만 삭제한다. 한꺼번에 다 지워야 한다. 삭제 후 절대 되돌릴 수 없다.
+DROP 명령어는 데이블 전체를 삭제, 공간, 객체를 삭제한다. 삭제 후 절대 되돌릴 수 없다.
+
+
+숙제 p.221 1~28
+
+
+// 2017-10-31
+숙제
+p112 1~108
+p112_1.sql
+육지연_20171031.zip
+
+
+
+set serveroutput on
+set timing on
+
+
+// 2017-11-08
+데이터베이스 시험
+
+
+// 2017-11-09
+자바 시작
+
+byte = 8bit -------- 256-1 아스키코드
+2byte = 16bit	유니코드
+
+변수 : 하나의 값을 저장하는 공간
+
+Data type
+- 논리형 : boolean : 1byte = true or false
+- 문자형 : char : 2byte = '1', 'a', '한', '漢',
+						  '\', '\"'
+						  '0':48, '1':49
+						  'a':97
+- 숫자형
+		  byte 	1byte
+		  short	2byte
+		  int	4byte
+		  long	8byte
+		  
+- 실수형
+		  floot  4byte
+		  double 8byte
+		  
+		  
+p102 2~8		  
+p134 4~7
+		  
+
+//2017-12-04
+
+SQL> conn /as sysdba;
+연결되었습니다.
+SQL> alter user hr account unlock;
+
+사용자가 변경되었습니다.
+
+SQL> alter user hr identified by hr;
+
+사용자가 변경되었습니다.
+
+SQL> conn hr/hr;
+연결되었습니다.
+SQL> select table_name from tabs;
+
+TABLE_NAME
+------------------------------
+JOBS
+LOCATIONS
+EMPLOYEES
+DEPARTMENTS
+REGIONS
+JOB_HISTORY
+COUNTRIES
+
+7 개의 행이 선택되었습니다.
+
+SQL> create table product(
+  2  sno number primary key,
+  3  name varchar2(20) not null,
+  4  price number not null,
+  5  num number not null
+  6  );
+
+테이블이 생성되었습니다.
+
+SQL> create sequence seq_product;
+
+시퀀스가 생성되었습니다.
+
+
+--on delete cascade
+--부모테이블에서 삭제하면 참조하는 자식테이블 데이터도 삭제됨
+
+create table myorder(
+order_num number primary key,
+sno number references product(sno) on delete cascade,
+num number not null,
+total_price number,
+o_date date,
+result varchar2(2)
+);
+
+create sequence seq_myorder;
