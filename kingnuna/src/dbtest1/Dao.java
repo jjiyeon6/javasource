@@ -12,4 +12,6 @@ public interface Dao {
 	void update(Product p);
 
 	void delete(int sno);
+	
+	void updateNum(int sno, int num);
 }
