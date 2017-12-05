@@ -33,15 +33,17 @@ public class DaoImpl implements Dao {
 	@Override
 	public void insert(Order o) {
 		// TODO Auto-generated method stub
-		String sql = "insert into myorder(order_num,sno,num,o_date,result) values(seq_myorder.nextval,?,?,sysdate,'N')";
+		String sql = "insert into myorder values(seq_myorder.nextval,?,?,"
+				   + "(select price from product where sno = ?)*?,sysdate,?)";
 		connect();
 		PreparedStatement pstmt = null;
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, o.getSno());
 			pstmt.setInt(2, o.getNum());
-//			pstmt.setInt(3, o.getTotal_price());
-//			pstmt.setString(3, o.getResult());
+			pstmt.setInt(3, o.getSno());
+			pstmt.setInt(4, o.getNum());
+			pstmt.setString(5, "N");
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -95,25 +97,19 @@ public class DaoImpl implements Dao {
 		} finally {
 			disconnect();
 		}
-		
 		return list;
 	}
 
 	@Override
 	public void editResult(int order_num, String str) {
 		// TODO Auto-generated method stub
-		String sql = "update myorder set num = ?, result = ? where order_num = ?";
+		String sql = "update myorder set result = ? where order_num = ?";
 		connect();
 		PreparedStatement pstmt = null;
 		try {
 			pstmt = conn.prepareStatement(sql);
-//			pstmt.setInt(1,o.getNum());
-//			pstmt.setInt(2, o.getTotal_price());
-//			pstmt.setDate(3, o.getO_date());
-			
-//			pstmt.setInt(1, num);
-			pstmt.setString(2, str);
-			pstmt.setInt(3, order_num);
+			pstmt.setString(1, str);
+			pstmt.setInt(2, order_num);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

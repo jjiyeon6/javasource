@@ -16,11 +16,13 @@ public interface Service {
 	
 	void addProduct(Scanner sc);
 
-	void getProduct(Scanner sc);
+	Product getProduct(int sno);
 
 	void getAll();
 
 	void editProduct(Scanner sc);
 
 	void delProduct(Scanner sc);
+	
+	boolean editNum(int sno, int num);
 }

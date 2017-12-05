@@ -16,11 +16,11 @@ public interface Service {
 	
 	void addOrder(Scanner sc);
 
-	void getOrder(Scanner sc);
+	Order getOrder(int order_num);
 
 	void getOrders();
 
-	void makeResult(Scanner sc);//搬力蜡公
+	void makeResult(int order_num);//搬力蜡公
 
-	void delOrder(Scanner sc);
+	void delOrder(int order_num);
 }

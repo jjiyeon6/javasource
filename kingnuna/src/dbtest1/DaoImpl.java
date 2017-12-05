@@ -135,4 +135,23 @@ public class DaoImpl implements Dao {
 		}
 	}
 
+	@Override
+	public void updateNum(int sno, int num) {
+		// TODO Auto-generated method stub
+		String sql = "update product set num = num-? where sno = ?";
+		connect();
+		PreparedStatement pstmt = null;
+		try {
+			pstmt= conn.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			pstmt.setInt(2, sno);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			disconnect();
+		}
+	}
+
 }

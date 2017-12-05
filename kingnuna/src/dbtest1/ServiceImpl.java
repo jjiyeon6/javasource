@@ -25,18 +25,16 @@ public class ServiceImpl implements Service {
 	}
 
 	@Override
-	public void getProduct(Scanner sc) {
+	public Product getProduct(int sno) {
 		// TODO Auto-generated method stub
 		System.out.println("제품 검색");
-		System.out.println("sno:");
-		int sno = sc.nextInt();
 		Product p = dao.select(sno);
 		if (p == null) {
 			System.out.println("없다");
 		} else {
 			System.out.println(p);
 		}
-
+		return p;
 	}
 
 	@Override
@@ -75,6 +73,17 @@ public class ServiceImpl implements Service {
 		System.out.println("sno:");
 		int sno = sc.nextInt();
 		dao.delete(sno);
+	}
+
+	@Override
+	public boolean editNum(int sno, int num) {
+		// TODO Auto-generated method stub
+		Product p = getProduct(sno);
+		if(p!=null && p.getNum()>=num) {
+			dao.updateNum(sno, num);
+			return true;
+		}
+		return false;
 	}
 
 }
