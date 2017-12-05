@@ -349,3 +349,44 @@ result varchar2(2)
 );
 
 create sequence seq_myorder;
+
+
+//2017-12-05
+create table member(
+id varchar2(20) primary key,
+pwd varchar2(20) not null,
+name varchar2(20) not null,
+email varchar2(50) not null,
+type number not null
+);
+
+
+회원가입 - id, pwd, name, email, type(판매자1 default/구매자2) 입력받아 저장
+탈퇴 - 로그인 id 정보 삭제
+내정보수정 - 로그인 id 정보를 보여주고, 새 pwd를 입력받아 수정
+
+로그인
+로그아웃
+
+Member
+Dao	
+insert(Member m);
+Member select(String id);
+void update(Member m);
+void delete(String id);
+ 
+DaoImpl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
