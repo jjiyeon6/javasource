@@ -11,6 +11,10 @@ public class Controller {
 	}
 	
 	public void join(Scanner sc) {
+		if(!loginId.equals("")) {
+			System.out.println("이미 로그인상태입니다");
+			return;
+		}
 		System.out.println("회원가입");
 		String id;
 		while(true) {
@@ -43,31 +47,58 @@ public class Controller {
 		String id = sc.next();
 		System.out.println("pwd:");
 		String pwd = sc.next();
-		serviceM.login(id, pwd);
+		if(serviceM.login(id, pwd)) {
+			System.out.println(loginId+"님 로그인");
+		}
 	}
 	
 	public void editInfo(Scanner sc) {
 		System.out.println("내정보수정");
 		System.out.println("loginId:"+loginId);
-		Member m = new Member();
-		if(loginId == null || loginId == "") {
+//		if(loginId == null || loginId == "") {
+		if(loginId.equals("")) {
 			System.out.println("로그인하세요");
+			return;
 		} else {
-			System.out.println("수정할 pwd:");
+			Member m = serviceM.getMember(loginId);
+			System.out.println(m);
+			System.out.println("new pwd:");
 			m.setPwd(sc.next());
-			m.setId(loginId);
+//			Member m = new Member();
+//			m.setId(loginId);
 			serviceM.editMember(m);
 			System.out.println("수정되었습니다.");
+			System.out.println("수정된 정보");
+			System.out.println(serviceM.getMember(loginId));
 		}
 	}
 	
 	public void logout(Scanner sc) {
-		loginId = null;
-		System.out.println("로그아웃되었습니다.");
+//		if(loginId == null || loginId == "") {
+		if(loginId.equals("")) {	
+			System.out.println("로그인하세요");
+			return;
+		} else {
+			loginId = "";
+			System.out.println("로그아웃되었습니다.");
+		}	
 	}
 	
 	public void leave(Scanner sc) {
-		serviceM.delMember(loginId);
-		System.out.println("탈퇴되었습니다.");
+//		if(loginId == null || loginId == "") {
+		if(loginId.equals("")) {	
+			System.out.println("로그인하세요");
+			return;
+		} else {
+			System.out.println("정말 탈퇴하시겠습니까?\n1.예 2.아니오");
+			int result = sc.nextInt();
+			if (result == 1) {
+				serviceM.delMember(loginId);
+				loginId = "";
+				System.out.println("탈퇴처리되었습니다.");
+			} else {
+				System.out.println("취소되었습니다. ");
+			}
+		}	
 	}
 }

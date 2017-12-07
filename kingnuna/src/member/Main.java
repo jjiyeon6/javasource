@@ -2,16 +2,19 @@ package member;
 
 import java.util.Scanner;
 
+import board.BoardController;
+
 public class Main {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Scanner sc = new Scanner(System.in);
 		Controller c = new Controller();
+		BoardController bc = new BoardController();
 		boolean flag = true;
 		int menu = 0;
 		while(flag) {
-			System.out.println("1.가입 2.로그인 3.내정보수정 4.로그아웃 5.탈퇴 6.종료");
+			System.out.println("1.가입 2.로그인 3.내정보수정 4.로그아웃 5.탈퇴 6.글쓰기 7.종료");
 			menu = sc.nextInt();
 			switch(menu) {
 			case 1:
@@ -30,6 +33,9 @@ public class Main {
 				c.leave(sc);
 				break;
 			case 6:
+				bc.menuB(sc);
+				break;	
+			case 7:
 				flag = false;
 				break;	
 			}
