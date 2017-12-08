@@ -61,7 +61,9 @@ public class DaoImpl implements Dao {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, sno);
 			rs = pstmt.executeQuery();//실행된 결과를 rs에 담는다.
-			if(rs.next()) {//sno는 primary key 때문에 유니크. for문이 아니라 next()로 한줄씩 읽어서 Product객체로 묶어서 반환
+			//sno는 primary key 때문에 유니크. for문이 아니라 next()로 한줄씩 읽어서 Product객체로 묶어서 반환
+			//next()는 
+			if(rs.next()) {
 				return new Product(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4));
 			}
 		} catch (SQLException e) {

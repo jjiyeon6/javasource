@@ -3,9 +3,6 @@ package board;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import dbtest1.Product;
-import order.Order;
-
 public class ServiceImpl implements Service {
 	private Dao dao;
 	
@@ -22,8 +19,10 @@ public class ServiceImpl implements Service {
 	@Override
 	public Board getArticle(int num) {
 		// TODO Auto-generated method stub
-		Board b = dao.select(num);
-		return b;
+//		Board b = dao.select(num);
+//		return b;
+		return dao.select(num);
+		
 	}
 
 	@Override
@@ -31,12 +30,8 @@ public class ServiceImpl implements Service {
 		// TODO Auto-generated method stub
 //		dao.selectAll();
 		
-		ArrayList<Board> list = dao.selectAll();
-		Iterator<Board> it = list.iterator();
-		while(it.hasNext()) {
-			System.out.println(it.next());
-		}
-		return null;
+//		return null;
+		return dao.selectAll();
 		
 	}
 
@@ -50,6 +45,18 @@ public class ServiceImpl implements Service {
 	public void delArticle(int num) {
 		// TODO Auto-generated method stub
 		dao.delete(num);
+	}
+
+	@Override
+	public ArrayList<Board> getArticleByWriter(String id) {
+		// TODO Auto-generated method stub
+		return dao.selectByWriter(id);
+	}
+
+	@Override
+	public ArrayList<Board> getArticleByTitle(String title) {
+		// TODO Auto-generated method stub
+		return dao.selectByTitle(title);
 	}
 
 }

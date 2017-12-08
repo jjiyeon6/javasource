@@ -7,6 +7,10 @@ public interface Service {
 
 	Board getArticle(int num);
 
+	ArrayList<Board> getArticleByWriter(String id);
+
+	ArrayList<Board> getArticleByTitle(String title);
+
 	ArrayList<Board> getAll();
 
 	void editArticle(Board b);

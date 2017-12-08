@@ -101,4 +101,14 @@ public class Controller {
 			}
 		}	
 	}
+	
+	public boolean checkType(String id) {
+		Member m = serviceM.getMember(loginId);
+		int type = m.getType();
+		if(type==1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
