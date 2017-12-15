@@ -1,0 +1,66 @@
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+
+public class FileReaderWriter {
+	
+	public static void main(String[] args){
+		
+		int i = 0;
+		
+		// sample.txt 파일을 File 객체로 가져온다.
+		File file = new File("sample.txt");
+		
+		FileReader fr = null;
+		FileWriter fw = null;
+		
+		InputStreamReader isr = null;
+		
+		try{
+			
+			// InputStreamReader로 콘솔에서 입력한 문자를 가져오는 객체를 생성한다.
+			isr = new InputStreamReader(System.in);
+			
+			// sample.txt 에 출력할 FileWriter 객체를 생성한다.
+			// true 이므로, 기존의 sample.txt 파일 뒤에 이어서 출력한다.
+			fw = new FileWriter(file, true);
+			
+			// 콘솔에서 입력받은(System.in) 문자를 FileWriter에 쓴다.
+			// 컨트롤 - Z  가 입력될 때까지 입력을 받는다.
+			while((i=isr.read())!=-1){
+				
+				fw.write(i);
+			
+			}
+			
+			// 입력받은 버퍼를 파일에 내보낸다.
+			fw.flush();
+			
+			
+			// sample.txt 파일을 읽을 FileReader 객체를 생성한다.
+			fr = new FileReader(file);
+			
+			
+			// sample.txt 파일의 끝까지 읽으면서 콘솔에 출력한다.
+			while((i=fr.read())!=-1){
+				
+				System.out.print((char)i);
+				
+			}
+						
+		}catch(IOException e){
+			e.printStackTrace();
+		}finally{
+			
+			// InputStreamReader, FileReader, FileWriter를 닫아준다.
+			if(isr != null) try{isr.close();}catch(IOException e){}
+			if(fr != null) try{fr.close();}catch(IOException e){}
+			if(fw != null) try{fw.close();}catch(IOException e){}
+			
+		}
+	}
+
+}

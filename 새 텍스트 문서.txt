@@ -370,7 +370,7 @@ type number not null
 
 Member
 Dao	
-insert(Member m);
+void insert(Member m);
 Member select(String id);
 void update(Member m);
 void delete(String id);
@@ -378,10 +378,44 @@ void delete(String id);
 DaoImpl
 
 
+//2017-12-07
+
+create table board(
+num     number  primary key,
+w_date  date    not null,
+id      varchar2(20)    references member(id) on delete cascade,
+pwd     varchar2(20)    not null,
+title   varchar2(20),
+content varchar2(100)
+);
+
+create sequence seq_board;
 
 
+	void insert(Board b);
 
+	Board select(int num);
 
+	ArrayList<Board> selectAll();
+
+	void update(Board b);
+
+	void delete(int num);
+
+	
+	
+//2017-12-08
+
+create table goods(
+num number primary key,
+id  varchar2(20) references member(id) on delete cascade,
+title varchar2(50)  not null,
+explain varchar2(100),
+price number,
+qty number
+);
+
+create sequence seq_goods;
 
 
 
