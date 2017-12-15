@@ -1,41 +1,32 @@
-package member;
+package main;
 
 import java.util.Scanner;
 
+import member.Controller;
+
 public class Main {
-	public static void checkType(Menu m, Scanner sc) {
-		if(Controller.loginType==0) {
-			System.out.println("로그인하세요");
-		} else {
-			switch(Controller.loginType) {
-			case 1:
-				m.menuSeller(sc);
-				break;
-			case 2:
-				m.menuBuyer(sc);
-				break;
-			}
-		}
-	}
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Scanner sc = new Scanner(System.in);
+		System.out.println("**학사관리시스템입니다**");
+		Controller c = new Controller();
 		Menu m = new Menu();
 		boolean flag = true;
 		int menu = 0;
 		while(flag) {
-			System.out.println("1.회원관리 2.게시판 3.SHOP 4.종료");
+			System.out.println("1.로그인 2.로그아웃 3.회원가입 4.종료");
 			menu = sc.nextInt();
 			switch(menu) {
 			case 1:
-				m.menuMember(sc);
+				c.login(sc);
+				m.mainMenu(sc);
 				break;
 			case 2:
-				m.menuBoard(sc);
+				c.logout();
 				break;
 			case 3:
-				checkType(m, sc);
+				c.join(sc);
 				break;	
 			case 4:
 				flag = false;

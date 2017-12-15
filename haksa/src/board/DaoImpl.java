@@ -1,17 +1,18 @@
-package seller;
+package board;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import dbtest1.DBConnect;
+import dbConn.DBConnect;
 
 public class DaoImpl implements Dao {
 	private Connection conn;
 	private DBConnect db;
-	
+
 	public DaoImpl() {
 		db = DBConnect.getInstance();
 	}
@@ -19,7 +20,7 @@ public class DaoImpl implements Dao {
 	public void connect() {
 		conn = db.getConnection();
 	}
-	
+
 	public void disconnect() {
 		try {
 			conn.close();
@@ -28,20 +29,21 @@ public class DaoImpl implements Dao {
 			e.printStackTrace();
 		}
 	}
-	
 	@Override
-	public void insert(Seller s) {
+	public void insert(Board b) {
 		// TODO Auto-generated method stub
-		String sql = "insert into seller values(seq_seller.nextval,?,?,?,?,?)";
-		connect();
+		String sql = "insert into board2 values(seq_board2.nextval, sysdate, ?, ?, ?, ?, ?)";
+		connect();//db연결
 		PreparedStatement pstmt = null;
 		try {
+			//커넥션 객체로부터 PreparedStatement를 생성. 실행할 sql문을 파라메터로 전달.
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, s.getId());
-			pstmt.setString(2, s.getTitle());
-			pstmt.setString(3, s.getExplain());
-			pstmt.setInt(4, s.getPrice());
-			pstmt.setInt(5, s.getQty());
+			//sql문의 ?에 변수값을 매칭
+			pstmt.setString(1, b.getStu_num());
+			pstmt.setString(2, b.getW_pwd());
+			pstmt.setString(3, b.getTitle());
+			pstmt.setString(4, b.getContent());
+			pstmt.setString(5, b.getW_file());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -49,14 +51,13 @@ public class DaoImpl implements Dao {
 		} finally {
 			disconnect();
 		}
-
 	}
 
 	@Override
-	public Seller selectByNum(int num) {
+	public Board select(int num) {
 		// TODO Auto-generated method stub
 		ResultSet rs = null;
-		String sql = "select * from seller where num = ?";
+		String sql = "select * from board2 where num=?";
 		connect();
 		PreparedStatement pstmt = null;
 		try {
@@ -64,7 +65,17 @@ public class DaoImpl implements Dao {
 			pstmt.setInt(1, num);
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
-				return new Seller(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getInt(6));
+				int num2 = rs.getInt(1);//글번호
+				Date date = rs.getDate(2);//작성일
+				String stu_num = rs.getString(3);//작성자
+				String pwd = rs.getString(4);//글비밀번호
+				String title = rs.getString(5);//글제목
+				String content = rs.getString(6);//글내용
+				String w_file = rs.getString(7);
+				Board x = new Board(num2, date, stu_num, pwd, title, content, w_file);
+				return x;
+				//return new Board(rs.getInt(1), rs.getDate(2), rs.getString(3),
+				//rs.getString(4),rs.getString(5),rs.getString(6));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -76,43 +87,20 @@ public class DaoImpl implements Dao {
 	}
 
 	@Override
-	public ArrayList<Seller> selectByTitle(String title) {
+	public ArrayList<Board> selectByWriter(String stu_num) {
 		// TODO Auto-generated method stub
-		ArrayList<Seller> list = new ArrayList<Seller>();
+		ArrayList<Board> list = new ArrayList<Board>();
 		ResultSet rs = null;
-		String sql = "select * from seller where title like '%"+title+"%'";
+		String sql = "select * from board2 where stu_num=?";
 		connect();
 		PreparedStatement pstmt = null;
 		try {
 			pstmt = conn.prepareStatement(sql);
-//			pstmt.setInt(1, num);
+			pstmt.setString(1, stu_num);
 			rs = pstmt.executeQuery();
-			while(rs.next()) {
-				list.add(new Seller(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getInt(6)));
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			disconnect();
-		}
-		return list;
-	}
-
-	@Override
-	public ArrayList<Seller> selectById(String id) {
-		// TODO Auto-generated method stub
-		ArrayList<Seller> list = new ArrayList<Seller>();
-		ResultSet rs = null;
-		String sql = "select num, title, price from seller where id = ?";
-		connect();
-		PreparedStatement pstmt = null;
-		try {
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, id);
-			rs = pstmt.executeQuery();
-			while(rs.next()) {
-				list.add(new Seller(rs.getInt(1), rs.getString(2), rs.getInt(3)));
+			while(rs.next()) {				
+				list.add(new Board(rs.getInt(1), rs.getDate(2), rs.getString(3),
+						rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7)));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -124,18 +112,43 @@ public class DaoImpl implements Dao {
 	}
 	
 	@Override
-	public ArrayList<Seller> selectAll() {
+	public ArrayList<Board> selectByTitle(String title) {
 		// TODO Auto-generated method stub
-		ArrayList<Seller> list = new ArrayList<Seller>();
+		ArrayList<Board> list = new ArrayList<Board>();
 		ResultSet rs = null;
-		String sql = "select num, title, price from seller";
+		String sql = "select * from board2 where title like '%"+title+"%'";
 		connect();
 		PreparedStatement pstmt = null;
 		try {
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
-			while(rs.next()) {
-				list.add(new Seller(rs.getInt(1), rs.getString(2), rs.getInt(3)));
+			while(rs.next()) {				
+				list.add(new Board(rs.getInt(1), rs.getDate(2), rs.getString(3),
+						rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7)));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			disconnect();
+		}
+		return list;
+	}
+	
+	@Override
+	public ArrayList<Board> selectAll() {
+		// TODO Auto-generated method stub
+		ArrayList<Board> list = new ArrayList<Board>();
+		ResultSet rs = null;
+		String sql = "select * from board2";
+		connect();
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {				
+				list.add(new Board(rs.getInt(1), rs.getDate(2), rs.getString(3),
+				rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7)));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -147,17 +160,18 @@ public class DaoImpl implements Dao {
 	}
 
 	@Override
-	public void update(Seller s) {
+	public void update(Board b) {
 		// TODO Auto-generated method stub
-		String sql = "update seller set explain = ?, price = ?, qty = ? where num = ?";
-		connect();
+		String sql = "update board2 set w_date=sysdate, title=?, content=? where stu_num=?";
+		connect();//db연결
 		PreparedStatement pstmt = null;
 		try {
+			//커넥션 객체로부터 PreparedStatement를 생성. 실행할 sql문을 파라메터로 전달.
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, s.getExplain());
-			pstmt.setInt(2, s.getPrice());
-			pstmt.setInt(3, s.getQty());
-			pstmt.setInt(4, s.getNum());
+			//sql문의 ?에 변수값을 매칭			
+			pstmt.setString(1, b.getTitle());
+			pstmt.setString(2, b.getContent());
+			pstmt.setString(3, b.getStu_num());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -165,17 +179,18 @@ public class DaoImpl implements Dao {
 		} finally {
 			disconnect();
 		}
-
 	}
 
 	@Override
 	public void delete(int num) {
 		// TODO Auto-generated method stub
-		String sql = "delete from seller where num = ?";
-		connect();
+		String sql = "delete board2 where num=?";
+		connect();//db연결
 		PreparedStatement pstmt = null;
 		try {
+			//커넥션 객체로부터 PreparedStatement를 생성. 실행할 sql문을 파라메터로 전달.
 			pstmt = conn.prepareStatement(sql);
+			//sql문의 ?에 변수값을 매칭			
 			pstmt.setInt(1, num);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {

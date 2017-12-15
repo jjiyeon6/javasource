@@ -28,9 +28,9 @@ public class ServiceImpl implements Service {
 	}
 
 	@Override
-	public ArrayList<Seller> getMyAll(String id) {
+	public ArrayList<Seller> getGoodsById(String id) {
 		// TODO Auto-generated method stub
-		return dao.selectMyAll(id);
+		return dao.selectById(id);
 	}
 
 	@Override
@@ -43,6 +43,20 @@ public class ServiceImpl implements Service {
 	public void editGoods(Seller s) {
 		// TODO Auto-generated method stub
 		dao.update(s);
+	}
+	
+	@Override
+	public void editQuantity(int num, int qty) {
+		Seller s = getGoodsByNum(num);
+		if(s == null) {
+			return;
+		}
+		if(s.getQty() < qty) {
+			System.out.println("수량부족으로 주문 취소");
+			return;
+		}
+		s.setQty(s.getQty() - qty);
+		dao.update(s);//수량만 주문한 양만큼 변경
 	}
 
 	@Override

@@ -3,8 +3,6 @@ package seller;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import member.Controller;
-
 public class SellerController {
 	private Service serviceS;
 	
@@ -12,16 +10,8 @@ public class SellerController {
 		serviceS = new ServiceImpl();
 	}
 
-	public boolean loginCheck() {
-		return Controller.loginId.equals("");
-	}
-	
 	//1.판매등록
 	public void regist(Scanner sc) {
-		if(loginCheck()) {
-			System.out.println("로그인하세요");
-			return;
-		}
 		System.out.println("판매 등록");
 		Seller s = new Seller();
 		s.setId(member.Controller.loginId);
@@ -47,28 +37,33 @@ public class SellerController {
 	
 	//2.내상품목록
 	public void getMyGoods() {
-		if(loginCheck()) {
-			System.out.println("로그인하세요");
-			return;
-		}
-		printAll(serviceS.getMyAll(member.Controller.loginId));
+		System.out.println("내가 등록한 상품 목록");
+		ArrayList<Seller> list = serviceS.getGoodsById(member.Controller.loginId);
+		if(list.size() ==0) {
+			System.out.println("검색된 결과가 없습니다");
+		} else {
+			printAll(list);
+		}	
 	}
 	//3.전체상품목록
 	public void getAll() {
-		printAll(serviceS.getAll());
+		System.out.println("전체 상품 목록");
+		ArrayList<Seller> list = serviceS.getAll();
+		if(list.size() ==0) {
+			System.out.println("검색된 결과가 없습니다");
+		} else {
+			printAll(list);
+		}	
 	}
 	
 	//4.수정
 	public void editGoods(Scanner sc) {
-		if(loginCheck()) {
-			System.out.println("로그인하세요");
-			return;
-		}
 		System.out.println("판매 수정");
 		System.out.println("수정할 제품번호:");
 		Seller s = serviceS.getGoodsByNum(sc.nextInt());
 		if(s==null) {
 			System.out.println("수정할 제품이 없습니다");
+			return;
 		} else {
 			System.out.println("수정전 판매제품");
 			System.out.println(s);
@@ -90,16 +85,13 @@ public class SellerController {
 	
 	//5.삭제
 	public void delGoods(Scanner sc) {
-		if(loginCheck()) {
-			System.out.println("로그인하세요");
-			return;
-		}
 		System.out.println("판매 삭제");
 		System.out.println("삭제할 제품번호:");
 		int num = sc.nextInt();
 		Seller s = serviceS.getGoodsByNum(num);
 		if(s==null) {
 			System.out.println("삭제할 제품이 없습니다");
+			return;
 		}
 		if(s.getId().equals(member.Controller.loginId)) {
 			serviceS.delGoods(num);

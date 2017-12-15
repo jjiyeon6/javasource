@@ -120,13 +120,13 @@ public class Menu {
 		boolean flag = true;
 		int menu = 0;
 		while(flag) {
-			System.out.println("[구매자] 1.구매 2.종료");
+			System.out.println("[구매자] 1.구매 2.내구매목록 3.제품목록 4.판매자로 검색 5.제목으로 검색 6.종료");
 			menu = sc.nextInt();
 			switch(menu) {
 			case 1:
 				cs.regist(sc);
 				break;
-			case 2:
+			case 6:
 				flag = false;
 				break;	
 			}

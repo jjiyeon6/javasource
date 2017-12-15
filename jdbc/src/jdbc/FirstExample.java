@@ -42,7 +42,7 @@ public class FirstExample {
 			while(rs.next()) {
 				int empno = rs.getInt("empno");
 				String ename = rs.getString("ename");
-				
+//				
 				System.out.print("empno : " + empno);
 				System.out.println(", ename : " + ename);
 			}

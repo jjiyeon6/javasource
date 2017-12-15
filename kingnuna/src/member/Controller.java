@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 public class Controller {
 	public static String loginId = "";
+	public static int loginType = 0;
 	private Service serviceM;
 	
 	public Controller() {
@@ -48,6 +49,7 @@ public class Controller {
 		System.out.println("pwd:");
 		String pwd = sc.next();
 		if(serviceM.login(id, pwd)) {
+			loginType = serviceM.getMember(id).getType();
 			System.out.println(loginId+"´Ô ·Î±×ÀÎ");
 		}
 	}
